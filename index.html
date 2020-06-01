@@ -7,18 +7,31 @@
     <style> 
     body {
         display:flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 100vh;
     }
+
+    h1 {
+        color: red;
+    }
     </style>
 </head>
 <body>
+    <input id="inputAmount" type="text"></input><br>
     <button id="addExpense">+</button>
-    <input id="inputAmount" type="text"></input>
+    <h1 id="expenseBanner">0</h1>
     <script>
+
+        // get the heading element
+        const expenseBanner = document.querySelector("#expenseBanner");
+
+        // set the heding element to total expense
+
         // init totalExpense at 0
         let totalExpense = 0;
+
         // onButtonClick add input amount to totalExpense
             function addExpenseToTotal() {
                 // read value fron input amount
@@ -31,14 +44,19 @@
                 // convert value to number
                 const expense = parseInt(textAmount, 10);
                 console.log({ expense });
+
                 // add that value to totalExpense
                 totalExpense += expense;
                 console.log({ totalExpense });
+
+                // set heading element to total expense
+                expenseBanner.textContent = totalExpense;
             }
         // Get the btn element
         const element = document.querySelector("#addExpense");
         // listen to click event
         element.addEventListener("click", addExpenseToTotal, false);
     </script>
+    
 </body>
 </html>

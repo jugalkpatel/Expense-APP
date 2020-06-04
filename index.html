@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Expense</title>
     <style> 
+    
     body {
         display:flex;
         flex-direction: column;
@@ -16,47 +17,80 @@
     h1 {
         color: red;
     }
+
     </style>
 </head>
 <body>
-    <input id="inputAmount" type="text"></input><br>
+    <input type="text" id="inputAmount"><br>
+    <input type="text" id="Description"><br>
     <button id="addExpense">+</button>
     <h1 id="expenseBanner">0</h1>
+    <div id="expenseTable"></div>
     <script>
+        // all expenses 
+        let allExpenses = [];
+
+        // get refrerence from inputAmount element
+        const getEnteredAmount = document.querySelector("#inputAmount");
+
+        // get the refefrece from decription element
+        const descEl = document.querySelector("#Description");
 
         // get the heading element
         const expenseBanner = document.querySelector("#expenseBanner");
 
-        // set the heding element to total expense
+        // generating expense table 
+        const expenseTable = document.querySelector("#expenseTable");
 
         // init totalExpense at 0
         let totalExpense = 0;
 
         // onButtonClick add input amount to totalExpense
             function addExpenseToTotal() {
-                // read value fron input amount
-                const getenteredAmount = document.querySelector("#inputAmount");
 
-                // extract value from input 
-                const textAmount = getenteredAmount.value;
-                console.log({ textAmount });
+                const obj = {};
+
+                // extract value from getEnteredAmount 
+                const textAmount = getEnteredAmount.value;
+
+                // extract value from DescEl
+                const textDesc = descEl.value;
+                // console.log({ textAmount,textDesc });
+
+                // add description and amount into obj
+                obj.Description = textDesc;
+                obj.Amount = textAmount;
+
+                // push bundled object into array allExpenses
+                allExpenses.push(obj);
 
                 // convert value to number
                 const expense = parseInt(textAmount, 10);
-                console.log({ expense });
+                // console.log({ expense });
 
                 // add that value to totalExpense
                 totalExpense += expense;
-                console.log({ totalExpense });
+                // console.log({ totalExpense });
+
+                // using string interpolation
+                const someText = `Total Expense: ${totalExpense}`; 
 
                 // set heading element to total expense
-                expenseBanner.textContent = totalExpense;
+                expenseBanner.textContent = someText;
+
+                // Traverse through each element of allExpenses and Return array of string populated  with content and <div>
+                const populatedwithExpenses = allExpenses.map(element => {
+                    return `<div>${element.Amount} , ${element.Description}</div>`;
+                })
+                expenseTable.innerHTML = populatedwithExpenses.join("");
+
             }
+        
         // Get the btn element
         const element = document.querySelector("#addExpense");
+
         // listen to click event
-        element.addEventListener("click", addExpenseToTotal, false);
+        element.addEventListener("click", addExpenseToTotal, false); 
     </script>
-    
 </body>
 </html>

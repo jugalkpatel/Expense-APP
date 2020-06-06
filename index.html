@@ -1,31 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Expense</title>
-    <style> 
-    
-    body {
-        display:flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- <link  rel="stylesheet" type="css/html" href="Css/main.css"> -->
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"
+        integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP"
+        crossorigin="anonymous"></script>
+    <style>
+        #margin-div {
+            margin-top: 5%;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-bottom: auto;
+        }
 
-    h1 {
-        color: red;
-    }
+        #content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
+        h1 {
+            color: red;
+        }
     </style>
 </head>
+
 <body>
-    <input type="text" id="inputAmount"><br>
-    <input type="text" id="Description"><br>
-    <button id="addExpense">+</button>
-    <h1 id="expenseBanner">0</h1>
-    <div id="expenseTable"></div>
+    <nav class="navbar navbar-dark" style="background-color:rgb(6, 18, 75)">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-file-invoice-dollar"></i>
+            Xpenze
+        </a>
+    </nav>
+    <div id="margin-div">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <div class="input-group mb-3">
+                    <div class="input-group-pretend">
+                        <span class="input-group-text">₹</span>
+                    </div>
+                    <input type="text" class="form-control" id="inputAmount" placeholder="Amount">
+                </div>
+                <div class="input-group mb-3">
+
+                    <div class="input-group-pretend">
+                        <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" id="Description" placeholder="Item">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="addExpense">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <ul class="list-group" id="expenseTable">
+            </ul>
+        </div>
+        <div class="alert alert-primary" role="alert" id="expenseBanner">
+        </div>
+    </div>
+    <!-- <h1 id="expenseBanner">0</h1> -->
     <script>
         // all expenses 
         let allExpenses = [];
@@ -46,51 +89,87 @@
         let totalExpense = 0;
 
         // onButtonClick add input amount to totalExpense
-            function addExpenseToTotal() {
+        function addExpenseToTotal() {
 
-                const obj = {};
+            const obj = {};
 
-                // extract value from getEnteredAmount 
-                const textAmount = getEnteredAmount.value;
+            // extract value from getEnteredAmount 
+            const textAmount = getEnteredAmount.value;
 
-                // extract value from DescEl
-                const textDesc = descEl.value;
-                // console.log({ textAmount,textDesc });
+            // extract value from DescEl
+            const textDesc = descEl.value;
+            // console.log({ textAmount,textDesc });
 
-                // add description and amount into obj
-                obj.Description = textDesc;
-                obj.Amount = textAmount;
+            // add description and amount into obj
+            obj.Description = textDesc;
+            obj.Amount = textAmount;
+            obj.MonthDate = new Date();
 
-                // push bundled object into array allExpenses
-                allExpenses.push(obj);
+            // push bundled object into array allExpenses
+            allExpenses.push(obj);
 
-                // convert value to number
-                const expense = parseInt(textAmount, 10);
-                // console.log({ expense });
+            // convert value to number
+            const expense = parseInt(textAmount, 10);
+            // console.log({ expense });
 
-                // add that value to totalExpense
-                totalExpense += expense;
-                // console.log({ totalExpense });
+            // add that value to totalExpense
+            totalExpense += expense;
+            // console.log({ totalExpense });
 
-                // using string interpolation
-                const someText = `Total Expense: ${totalExpense}`; 
+            // using string interpolation
+            const someText = `Total Expense: ${totalExpense}`;
 
-                // set heading element to total expense
-                expenseBanner.textContent = someText;
+            // set heading element to total expense
+            expenseBanner.textContent = someText;
 
-                // Traverse through each element of allExpenses and Return array of string populated  with content and <div>
-                const populatedwithExpenses = allExpenses.map(element => {
-                    return `<div>${element.Amount} , ${element.Description}</div>`;
-                })
-                expenseTable.innerHTML = populatedwithExpenses.join("");
+            let date = new Date().toDateString();
 
-            }
-        
+            // Traverse through each element of allExpenses and Return array of string populated  with content
+            const populatedwithExpenses = allExpenses.map(element => {
+                // return `<div>${element.Amount} , ${element.Description}</div>`;
+                return getListItems(element, date);
+            })
+            expenseTable.innerHTML = populatedwithExpenses.join("");
+
+        }
+
         // Get the btn element
         const element = document.querySelector("#addExpense");
 
         // listen to click event
-        element.addEventListener("click", addExpenseToTotal, false); 
+        element.addEventListener("click", addExpenseToTotal, false);
+
+        function getListItems({ Description, Amount , MonthDate}) {
+            return `
+                <li class="list-group-item d-flex justify-content-between">
+                    <div class="d-flex flex-column">
+                        ${Description}
+                        <small class="text-muted">${getDateMonth(MonthDate)} </small>
+                    </div>
+                    <div>
+                        <span class="px-5">
+                        ${Amount}
+                        </span>
+                        <button type="button" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </li>
+            `;
+        }
+
+        // get date and month
+        function getDateMonth(moment) {
+            return moment.toLocaleDateString(
+                'en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                }
+            );
+        }
+        
     </script>
 </body>
+
 </html>

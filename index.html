@@ -30,7 +30,6 @@
         h1 {
             color: red;
         }
-
     </style>
 </head>
 
@@ -62,7 +61,7 @@
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
         <div>
             <ul class="list-group" id="expenseTable">
             </ul>
@@ -124,12 +123,7 @@
             expenseBanner.textContent = someText;
 
             // Traverse through each element of allExpenses and Return array of string populated  with content
-            const populatedwithExpenses = allExpenses.map(element => {
-                // return `<div>${element.Amount} , ${element.Description}</div>`;
-                return getListItems(element);
-            })
-
-            expenseTable.innerHTML = populatedwithExpenses.join("");
+            render(allExpenses);
 
         }
 
@@ -167,27 +161,38 @@
             return moment.toLocaleDateString(
                 'en-US', {
                 year: 'numeric',
-                month: 'long',          
+                month: 'long',
                 day: 'numeric',
             }
             );
         }
 
         function deleteItem(dateValue) {
-            const newArr = [];
-            for (let i = 0; i < allExpenses.length; i++){
-                const eachItemValue = allExpenses[i].MonthDate.valueOf();
-                if (eachItemValue !== dateValue) {
-                    newArr.push(allExpenses[i]);
-                }
-            }
+
+            const newArr = allExpenses.filter(itemobj => itemobj.MonthDate.valueOf() !== dateValue);
+
+            // const newArr = allExpenses.filter((itemobj) => {
+            //     if (itemobj.MonthDate.valueOf() !== dateValue){
+            //         return itemobj;
+            //     }
+            // });
+
+            // for (let i = 0; i < allExpenses.length; i++) {
+            //     const eachItemValue = allExpenses[i].MonthDate.valueOf();
+            //     if (eachItemValue !== dateValue) {
+            //         newArr.push(allExpenses[i]);
+            //     }
+            // }
+
             render(newArr);
         }
 
-        function render(elementList){
-            const populatedWithhtml = elementList.map(element  => {
-                return getListItems(element);
-            })
+        function render(elementList) {
+
+            // Traverse through Array and add each html populated object to array and return it.
+            const populatedWithhtml = elementList.map(element => getListItems(element));
+
+            // join function join each element in populated array and return String
             expenseTable.innerHTML = populatedWithhtml.join("");
         }
 

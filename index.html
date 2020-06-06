@@ -30,6 +30,7 @@
         h1 {
             color: red;
         }
+
     </style>
 </head>
 
@@ -39,6 +40,7 @@
             <i class="fas fa-file-invoice-dollar"></i>
             Xpenze
         </a>
+        <span class="navbar-brand mb-0 h1" id="expenseBanner"></span>
     </nav>
     <div id="margin-div">
         <div class="jumbotron jumbotron-fluid">
@@ -60,13 +62,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+         </div>
         <div>
             <ul class="list-group" id="expenseTable">
             </ul>
         </div>
-        <div class="alert alert-primary" role="alert" id="expenseBanner">
-        </div>
+        <!-- <div class="alert alert-primary" role="alert" id="expenseBanner"> -->
     </div>
     <!-- <h1 id="expenseBanner">0</h1> -->
     <script>
@@ -122,13 +123,12 @@
             // set heading element to total expense
             expenseBanner.textContent = someText;
 
-            let date = new Date().toDateString();
-
             // Traverse through each element of allExpenses and Return array of string populated  with content
             const populatedwithExpenses = allExpenses.map(element => {
                 // return `<div>${element.Amount} , ${element.Description}</div>`;
-                return getListItems(element, date);
+                return getListItems(element);
             })
+
             expenseTable.innerHTML = populatedwithExpenses.join("");
 
         }
@@ -139,7 +139,7 @@
         // listen to click event
         element.addEventListener("click", addExpenseToTotal, false);
 
-        function getListItems({ Description, Amount , MonthDate}) {
+        function getListItems({ Description, Amount, MonthDate }) {
             return `
                 <li class="list-group-item d-flex justify-content-between">
                     <div class="d-flex flex-column">
@@ -150,7 +150,11 @@
                         <span class="px-5">
                         ${Amount}
                         </span>
-                        <button type="button" class="btn btn-outline-danger btn-sm">
+                        <button 
+                            type="button" 
+                            class="btn btn-outline-danger btn-sm" 
+                            onclick="deleteItem(${MonthDate.valueOf()})"
+                        >
                         <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -162,13 +166,31 @@
         function getDateMonth(moment) {
             return moment.toLocaleDateString(
                 'en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                }
+                year: 'numeric',
+                month: 'long',          
+                day: 'numeric',
+            }
             );
         }
-        
+
+        function deleteItem(dateValue) {
+            const newArr = [];
+            for (let i = 0; i < allExpenses.length; i++){
+                const eachItemValue = allExpenses[i].MonthDate.valueOf();
+                if (eachItemValue !== dateValue) {
+                    newArr.push(allExpenses[i]);
+                }
+            }
+            render(newArr);
+        }
+
+        function render(elementList){
+            const populatedWithhtml = elementList.map(element  => {
+                return getListItems(element);
+            })
+            expenseTable.innerHTML = populatedWithhtml.join("");
+        }
+
     </script>
 </body>
 
